@@ -73,13 +73,13 @@ jobs:
         run: |
           KEY="${{ steps.check_ec2.outputs.key_exists }}"
           SG="${{ steps.check_ec2.outputs.sg_id }}"
-          [ "$KEY" != "None" ] && terraform import -var="aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" aws_key_pair.deployer "${{ secrets.PROJECT_NAME }}-key" 2>/dev/null || true
-          [ "$SG" != "None" ] && terraform import -var="aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" aws_security_group.sg "$SG" 2>/dev/null || true
+          [ "$KEY" != "None" ] && terraform import -var="aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -var="public_key=${{ secrets.PUBLIC_KEY }}" aws_key_pair.deployer "${{ secrets.PROJECT_NAME }}-key" 2>/dev/null || true
+          [ "$SG" != "None" ] && terraform import -var="aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -var="public_key=${{ secrets.PUBLIC_KEY }}" aws_security_group.sg "$SG" 2>/dev/null || true
         working-directory: terraform
 
       - name: Terraform Plan
         if: steps.check_ec2.outputs.exists != 'true'
-        run: terraform plan -var="aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -out=tfplan
+        run: terraform plan -var="aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -var="public_key=${{ secrets.PUBLIC_KEY }}" -out=tfplan
         working-directory: terraform
 
       - name: Terraform Apply
