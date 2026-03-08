@@ -40,6 +40,10 @@ variable "key_name" {
   default     = "faizun_tst_09-key"
 }
 
+variable "public_key" {
+  type = string
+}
+
 variable "vpc_cidr" {
   description = "CIDR block for the VPC"
   type        = string
